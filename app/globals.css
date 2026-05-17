@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --ami-black: #050608;
+  --ami-graphite: #0a0d12;
+  --ami-silver: #d6d9de;
+  --ami-blue: #102b4e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% 4%, rgba(23, 57, 98, 0.28), transparent 34rem),
+    radial-gradient(circle at 8% 20%, rgba(214, 217, 222, 0.08), transparent 28rem),
+    linear-gradient(180deg, #030405 0%, #07090c 46%, #050608 100%);
+  color: #f5f7fa;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.metal-text {
+  background: linear-gradient(115deg, #7c828b 0%, #ffffff 22%, #aeb4be 45%, #f4f6f8 62%, #717985 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.metal-surface {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02)),
+    linear-gradient(180deg, rgba(13, 39, 71, 0.3), rgba(5, 6, 8, 0.5));
+  border: 1px solid rgba(214, 217, 222, 0.14);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(214, 217, 222, 0.16);
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  outline: none;
+  padding: 0.9rem 1rem;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.field:focus {
+  border-color: rgba(214, 217, 222, 0.54);
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: 0 0 0 4px rgba(16, 43, 78, 0.38);
+}
+
+.field option {
+  background: #07090c;
+  color: #ffffff;
+}
+
+.mesh-line {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.shorts-shape {
+  clip-path: polygon(10% 0, 90% 0, 96% 100%, 58% 100%, 50% 68%, 42% 100%, 4% 100%);
+}
