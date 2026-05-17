@@ -25,9 +25,12 @@ import {
   X
 } from "lucide-react";
 
-const WHATSAPP_NUMBER = "INSERIR_NUMERO_AQUI";
-const INSTAGRAM_URL = "#";
-const TIKTOK_URL = "#";
+const WHATSAPP_NUMBER = "5585992468886";
+const INSTAGRAM_URL = "https://www.instagram.com/ami.fitnesss";
+const WBARBER_CHANNEL_URL = "https://whatsapp.com/channel/0029VbCi2aI1XquXkOvKVN1y";
+const LAUNCH_DATE = new Date("2026-05-20T00:00:00-03:00");
+const SHORT_PHOTO_URL = "";
+// const TIKTOK_URL = "#";
 
 const preorderMessage =
   "Olá! Quero entrar na pré-venda do calção masculino de corrida AMÍ e garantir acesso antecipado.";
@@ -122,10 +125,49 @@ const sizeChart = [
   { size: "G", waist: "88-96 cm", hip: "104-112 cm", height: "1,80 m+" }
 ];
 
+const initialLaunchCountdown = {
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+  isFinished: false,
+  isReady: false
+};
+
+function getLaunchCountdown() {
+  const distance = Math.max(LAUNCH_DATE.getTime() - Date.now(), 0);
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((distance / (1000 * 60)) % 60);
+  const seconds = Math.floor((distance / 1000) % 60);
+
+  return { days, hours, minutes, seconds, isFinished: distance === 0, isReady: true };
+}
+
 function whatsappUrl(message) {
   const number = WHATSAPP_NUMBER.replace(/\D/g, "");
   const encoded = encodeURIComponent(message);
   return number ? `https://wa.me/${number}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
+}
+
+function buildPreorderWhatsappMessage(payload) {
+  const groupInfo = payload.isRunningGroupMember
+    ? `Sim${payload.runningGroupName ? ` - ${payload.runningGroupName}` : ""}`
+    : "Não";
+
+  return [
+    "Olá! Quero entrar na pré-venda do calção masculino de corrida AMÍ.",
+    "",
+    "Dados do pedido:",
+    `Nome: ${payload.name}`,
+    `WhatsApp: ${payload.whatsapp}`,
+    `Tamanho: ${payload.size}`,
+    `Cor: ${payload.color}`,
+    `Quantidade: ${payload.quantity}`,
+    `Grupo de corrida: ${groupInfo}`,
+    "",
+    "Quero garantir meu acesso antecipado."
+  ].join("\n");
 }
 
 const footerLinks = [
@@ -147,7 +189,10 @@ async function submitPreorder(payload) {
   };
 
   console.info("Pré-venda AMÍ pronta para integração:", preorderPayload);
-  await new Promise((resolve) => setTimeout(resolve, 650));
+
+  const message = buildPreorderWhatsappMessage(preorderPayload);
+  window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
+
   return { ok: true };
 }
 
@@ -198,7 +243,7 @@ function SecondaryButton({ children, href, className = "" }) {
 
 function ShortMockup({ slide }) {
   return (
-    <div className="relative grid min-h-[15rem] place-items-center rounded-2xl border border-white/10 bg-black/28 sm:min-h-[18rem]">
+    <div className="relative grid min-h-[15rem] place-items-center rounded-2xl bg-black/28 sm:min-h-[18rem]">
       <div className="absolute h-52 w-52 rounded-full border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.13),transparent_68%)] sm:h-64 sm:w-64" />
       <div
         className={`shorts-shape relative h-40 w-52 border border-white/14 shadow-[0_28px_70px_rgba(0,0,0,0.65)] transition-transform duration-500 sm:h-52 sm:w-64 ${slide.angleClass}`}
@@ -245,6 +290,7 @@ export default function Home() {
   const [isSizeButtonExpanded, setIsSizeButtonExpanded] = useState(false);
   const [isSizeDrawerOpen, setIsSizeDrawerOpen] = useState(false);
   const [activeProductSlide, setActiveProductSlide] = useState(0);
+  const [launchCountdown, setLaunchCountdown] = useState(initialLaunchCountdown);
   const preorderSectionRef = useRef(null);
   const currentProductSlide = productSlides[activeProductSlide];
 
@@ -291,6 +337,16 @@ export default function Home() {
     return () => window.clearTimeout(retractTimer);
   }, [isFormVisible]);
 
+  useEffect(() => {
+    setLaunchCountdown(getLaunchCountdown());
+
+    const countdownTimer = window.setInterval(() => {
+      setLaunchCountdown(getLaunchCountdown());
+    }, 1000);
+
+    return () => window.clearInterval(countdownTimer);
+  }, []);
+
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
   }
@@ -309,16 +365,19 @@ export default function Home() {
   }
 
   const preorderForm = (
-    <form className="rounded-[1.25rem] border border-white/10 bg-black/30 p-4 sm:p-5" onSubmit={handleSubmit}>
+    <form className="relative rounded-[1.25rem] border border-white/10 bg-black/30 p-4 pt-8 sm:p-5 sm:pt-8" onSubmit={handleSubmit}>
+      <div className="absolute -right-2 -top-5 z-10 rotate-3 rounded-2xl border border-white/20 bg-white px-3 py-2 text-left text-black shadow-[0_18px_42px_rgba(0,0,0,0.42)] sm:-right-3">
+        <p className="text-[0.58rem] font-black uppercase tracking-[0.12em] text-zinc-600">Valor no</p>
+        <p className="text-[0.58rem] font-black uppercase tracking-[0.12em] text-zinc-600">Lançamento</p>
+        <p className="text-xl font-black leading-none">R$ 120,00</p>
+        {/* <p className="mt-1 text-[0.58rem] font-bold uppercase tracking-[0.1em] text-zinc-600">10% OFF</p> */}
+      </div>
+
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Lista de acesso antecipado</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Acesso antecipado</p>
           <h2 className="mt-1 text-xl font-black text-white">Garanta o seu</h2>
         </div>
-        {/* Desconto como detalhe secundário, não âncora principal */}
-        <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400">
-          10% OFF na abertura
-        </span>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -415,7 +474,7 @@ export default function Home() {
       )}
 
       <PrimaryButton className="mt-5 w-full" type="submit">
-        {status === "loading" ? "Enviando..." : "Quero acesso antecipado"} <ChevronRight className="h-4 w-4" />
+        {status === "loading" ? "Enviando..." : "Quero acesso antecipado + 10% off"} <ChevronRight className="h-4 w-4" />
       </PrimaryButton>
       <p className="mt-3 text-center text-sm leading-5 text-zinc-500">
         Prioridade no atendimento · 10% OFF · <br /> 1 Carbo Gel no lançamento.
@@ -516,7 +575,7 @@ export default function Home() {
         </aside>
       </div>
 
-      <section className="relative px-4 pb-10 pt-5 sm:px-8 sm:pb-14 lg:px-10">
+      <section className="relative min-h-[92svh] px-4 pb-10 pt-5 sm:min-h-screen sm:px-8 sm:pb-14 lg:px-10">
         <div className="mesh-line absolute inset-x-0 top-0 h-96 opacity-40" />
         <div className="absolute right-[-12rem] top-20 h-[28rem] w-[28rem] rounded-full bg-navy/30 blur-3xl" />
         <div className="relative mx-auto flex max-w-7xl flex-col gap-8">
@@ -543,22 +602,57 @@ export default function Home() {
                 <span className="metal-text">AMÍ.</span>
               </h1>
 
-              {/* SUBHEADLINE — material primeiro, benefício de pré-venda depois */}
-              <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 sm:text-xl sm:leading-8">
-                Tecido com compressão, secagem rápida e acabamento de marca importada — a partir de R$120.
-                Pré-venda com acesso antecipado para quem entrar na lista.
-              </p>
+              <div className="mt-6 max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-3">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-[radial-gradient(circle_at_50%_35%,rgba(214,217,222,0.14),transparent_32%),linear-gradient(135deg,#050608,#0d2747_58%,#020305)]">
+                  {SHORT_PHOTO_URL ? (
+                    <Image
+                      alt="Foto do calção masculino de corrida AMÍ"
+                      className="h-full w-full object-cover"
+                      height={720}
+                      src={SHORT_PHOTO_URL}
+                      width={960}
+                    />
+                  ) : (
+                    <div className="grid h-full place-items-center p-6 text-center">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-500">Foto do short</p>
+                        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-zinc-300">
+                          Espaço reservado para a imagem principal do calção de corrida.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              {/* SELOS — desconto como detalhe, não como argumento de entrada */}
-              <div className="mb-5 flex flex-wrap gap-2">
-                {["Primeira produção", "Quantidade fechada", "Acesso antecipado"].map((seal) => (
-                  <span
-                    className="rounded-full border border-white/12 bg-white/[0.06] px-2 py-2 text-[0.48rem] font-bold uppercase tracking-[0.14em] text-zinc-200 sm:text-xs"
-                    key={seal}
-                  >
-                    {seal}
-                  </span>
-                ))}
+              <div className="mt-6 max-w-2xl rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-zinc-500">Lançamento</p>
+                    <p className="mt-1 text-xl font-black text-white">20/05 - 08:00</p>
+                  </div>
+                  <p className="text-right text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400">
+                    {launchCountdown.isFinished ? "Pedidos abertos" : "Contagem regressiva"}
+                  </p>
+                </div>
+
+                <div className="mt-4 grid grid-cols-4 gap-2">
+                  {[
+                    ["Dias", launchCountdown.days],
+                    ["Horas", launchCountdown.hours],
+                    ["Min", launchCountdown.minutes],
+                    ["Seg", launchCountdown.seconds]
+                  ].map(([label, value]) => (
+                    <div className="rounded-xl border border-white/10 bg-black/28 p-3 text-center" key={label}>
+                      <p className="text-2xl font-black tabular-nums text-white">
+                        {launchCountdown.isReady ? String(value).padStart(2, "0") : "--"}
+                      </p>
+                      <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-zinc-500">
+                        {label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -655,7 +749,7 @@ export default function Home() {
                   <ShortMockup slide={currentProductSlide} />
 
                   <div className="border-t border-white/10 p-3">
-                    <p className="text-sm leading-6 text-zinc-400">{currentProductSlide.caption}</p>
+                    {/* <p className="text-sm leading-6 text-zinc-400">{currentProductSlide.caption}</p> */}
                     <div className="mt-3 grid grid-cols-4 gap-2">
                       {productSlides.map((slide, index) => (
                         <button
@@ -778,6 +872,16 @@ export default function Home() {
                     <p className="mt-1 text-sm font-bold text-white">Primeira produção AMÍ</p>
                   </div>
                 </div>
+
+                <a
+                  className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-black transition hover:bg-zinc-200 focus:outline-none focus:ring-4 focus:ring-white/20 sm:w-auto"
+                  href={WBARBER_CHANNEL_URL}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Entrar na comunidade
+                </a>
               </div>
             </div>
           </article>
@@ -815,7 +919,7 @@ export default function Home() {
             A AMÍ não faz reposição imediata. A entrada na lista garante prioridade no atendimento e acesso à condição especial antes da abertura geral dos pedidos.
           </p>
           <PrimaryButton className="mt-8 w-full sm:w-auto" href="#pre-venda">
-            Quero acesso antecipado <ArrowRight className="h-4 w-4" />
+            Quero acesso antecipado + 10% off <ArrowRight className="h-4 w-4" />
           </PrimaryButton>
         </div>
       </section>
@@ -836,16 +940,18 @@ export default function Home() {
                 aria-label="Instagram AMÍ"
                 className="text-zinc-300 transition-colors hover:text-white"
                 href={INSTAGRAM_URL}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 <Instagram className="h-6 w-6" />
               </a>
-              <a
+              {/* <a
                 aria-label="TikTok AMÍ"
                 className="text-zinc-300 transition-colors hover:text-white"
                 href={TIKTOK_URL}
               >
                 <Music2 className="h-6 w-6" />
-              </a>
+              </a> */}
               <a
                 aria-label="WhatsApp AMÍ"
                 className="text-zinc-300 transition-colors hover:text-white"
