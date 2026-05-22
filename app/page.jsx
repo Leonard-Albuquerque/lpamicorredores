@@ -100,7 +100,7 @@ const productSlides = [
     title: "Bolso",
     caption: "Detalhe do bolso e acabamento.",
     mediaType: "image",
-    src: "/ladoitems.png",
+    src: "/ladoItems.png",
     badge: "Foto 03",
     gradient: "linear-gradient(135deg,#20242b,#050608 50%,#111827)",
     angleClass: "rotate-3 scale-100",
