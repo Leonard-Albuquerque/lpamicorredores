@@ -90,7 +90,7 @@ const productSlides = [
     title: "Lado",
     caption: "Foto lateral do calção.",
     mediaType: "image",
-    src: "/lado2.jpeg",
+    src: "/novolado.jpeg",
     badge: "Foto 02",
     gradient: "linear-gradient(135deg,#132c4d,#07111f 54%,#020305)",
     angleClass: "-rotate-6 scale-95 skew-x-3",
