@@ -28,8 +28,8 @@ import {
 const WHATSAPP_NUMBER = "5585992468886";
 const INSTAGRAM_URL = "https://www.instagram.com/ami.fitnesss";
 const WBARBER_CHANNEL_URL = "https://whatsapp.com/channel/0029VbCi2aI1XquXkOvKVN1y";
-const LAUNCH_DATE = new Date("2026-05-20T00:00:00-03:00");
-const SHORT_PHOTO_URL = "";
+const LAUNCH_DATE = new Date("2026-05-25T00:00:00-03:00");
+const SHORT_PHOTO_URL = "/short-capa.jpeg";
 // const TIKTOK_URL = "#";
 
 const preorderMessage =
@@ -61,7 +61,7 @@ const benefits = [
   },
   {
     icon: ShieldCheck,
-    title: "Preto. Azul escuro. Sem ruído.",
+    title: "Cor Preto. Sem ruído.",
     text: "Paleta intencional para quem não precisa de destaque no visual. Duas cores que funcionam em qualquer rota."
   },
   {
@@ -73,41 +73,58 @@ const benefits = [
 
 const colors = [
   { name: "Preto", value: "#020305", border: "rgba(255,255,255,0.18)" },
-  { name: "Azul Escuro", value: "#0b2341", border: "rgba(95,146,207,0.42)" }
 ];
 
 const productSlides = [
   {
     title: "Frente",
-    caption: "Corte limpo, cintura firme e caimento estruturado.",
-    color: "Preto",
+    caption: "Foto frontal do calção.",
+    mediaType: "image",
+    src: "/perfil.jpeg",
+    badge: "Foto 01",
     gradient: "linear-gradient(135deg,#171b22,#030405 52%,#10141c)",
     angleClass: "rotate-0 scale-100",
     logo: "ami"
   },
   {
-    title: "Lateral",
-    caption: "Visual seco para corrida urbana, treino e rotina.",
-    color: "Azul Escuro",
+    title: "Lado",
+    caption: "Foto lateral do calção.",
+    mediaType: "image",
+    src: "/lado2.jpeg",
+    badge: "Foto 02",
     gradient: "linear-gradient(135deg,#132c4d,#07111f 54%,#020305)",
     angleClass: "-rotate-6 scale-95 skew-x-3",
     logo: "clean"
   },
   {
-    title: "Costas",
-    caption: "Acabamento discreto, sem excesso visual.",
-    color: "Preto",
+    title: "Bolso",
+    caption: "Detalhe do bolso e acabamento.",
+    mediaType: "image",
+    src: "/ladoitems.png",
+    badge: "Foto 03",
     gradient: "linear-gradient(135deg,#20242b,#050608 50%,#111827)",
     angleClass: "rotate-3 scale-100",
     logo: "ami-small"
   },
   {
-    title: "WBarber",
-    caption: "Aplicação exclusiva para membros WBarber Runners.",
-    color: "Preto",
+    title: "Corpo",
+    caption: "Caimento do short no corpo em movimento.",
+    mediaType: "image",
+    src: "/mostragem.jpeg",
+    badge: "Foto 04",
     gradient: "linear-gradient(135deg,#151820,#030405 50%,#1b1025)",
     angleClass: "-rotate-2 scale-100",
-    logo: "wbarber"
+    logo: "ami-small"
+  },
+  {
+    title: "Detalhes",
+    caption: "Vídeo demonstrando o short em uso.",
+    mediaType: "video",
+    src: "/demonstragem.mp4",
+    badge: "Vídeo",
+    gradient: "linear-gradient(135deg,#050608,#0d2747 56%,#020305)",
+    angleClass: "rotate-0 scale-100",
+    logo: "clean"
   }
 ];
 
@@ -117,12 +134,12 @@ const fabricSpecs = [
   { label: "Gramatura", value: "350 g" }
 ];
 
-const founderVideoUrl = "";
+const founderVideoUrl = "/videoregis.mp4";
 
 const sizeChart = [
-  { size: "P", waist: "72-80 cm", hip: "88-96 cm", height: "Até 1,70 m" },
-  { size: "M", waist: "80-88 cm", hip: "96-104 cm", height: "1,70-1,80 m" },
-  { size: "G", waist: "88-96 cm", hip: "104-112 cm", height: "1,80 m+" }
+  { size: "P", number: "34/36" },
+  { size: "M", number: "38/40" },
+  { size: "G", number: "42/44" }
 ];
 
 const initialLaunchCountdown = {
@@ -242,6 +259,36 @@ function SecondaryButton({ children, href, className = "" }) {
 }
 
 function ShortMockup({ slide }) {
+  if (slide.mediaType === "video") {
+    return (
+      <div className="relative min-h-[15rem] overflow-hidden rounded-2xl bg-black/28 sm:min-h-[18rem]">
+        {slide.src ? (
+          <video className="h-full min-h-[15rem] w-full object-cover sm:min-h-[18rem]" controls playsInline preload="metadata" src={slide.src}>
+            Seu navegador não suporta vídeo.
+          </video>
+        ) : (
+          <div className="grid min-h-[15rem] place-items-center bg-[radial-gradient(circle_at_50%_35%,rgba(214,217,222,0.16),transparent_30%),linear-gradient(135deg,#050608,#0d2747_55%,#020305)] p-6 text-center sm:min-h-[18rem]">
+            <div>
+              <PlayCircle className="mx-auto h-14 w-14 text-white/90" strokeWidth={1.5} />
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">Demonstração</p>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-zinc-300">
+                Espaço reservado para o vídeo do short em movimento.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (slide.src) {
+    return (
+      <div className="relative min-h-[15rem] overflow-hidden rounded-2xl bg-black/28 sm:min-h-[18rem]">
+        <Image alt={`Foto do short - ${slide.title}`} className="h-full min-h-[15rem] w-full object-cover sm:min-h-[18rem]" height={720} src={slide.src} width={960} />
+      </div>
+    );
+  }
+
   return (
     <div className="relative grid min-h-[15rem] place-items-center rounded-2xl bg-black/28 sm:min-h-[18rem]">
       <div className="absolute h-52 w-52 rounded-full border border-white/10 bg-[radial-gradient(circle,rgba(255,255,255,0.13),transparent_68%)] sm:h-64 sm:w-64" />
@@ -415,7 +462,7 @@ export default function Home() {
         <label>
           <span className="mb-1.5 block text-sm font-semibold text-zinc-300">Cor</span>
           <select className="field" onChange={(event) => updateField("color", event.target.value)} value={form.color}>
-            {["Preto", "Azul Escuro"].map((color) => (
+            {["Preto"].map((color) => (
               <option key={color} value={color}>
                 {color}
               </option>
@@ -445,12 +492,15 @@ export default function Home() {
         {form.isRunningGroupMember && (
           <label className="sm:col-span-2">
             <span className="mb-1.5 block text-sm font-semibold text-zinc-300">Nome do grupo</span>
-            <input
+            <select
               className="field"
               onChange={(event) => updateField("runningGroupName", event.target.value)}
-              placeholder="Ex.: Wbarber Runners"
+              required
               value={form.runningGroupName}
-            />
+            >
+              <option value="">Selecione o grupo</option>
+              <option value="Wbarber Runners">Wbarber Runners</option>
+            </select>
           </label>
         )}
       </div>
@@ -546,21 +596,17 @@ export default function Home() {
           </div>
 
           <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
-            <div className="grid grid-cols-[0.7fr_1fr_1fr_1fr] bg-white/[0.08] px-3 py-3 text-xs font-black uppercase tracking-[0.08em] text-zinc-300">
+            <div className="grid grid-cols-2 bg-white/[0.08] px-4 py-3 text-xs font-black uppercase tracking-[0.08em] text-zinc-300">
               <span>Tam.</span>
-              <span>Cintura</span>
-              <span>Quadril</span>
-              <span>Altura</span>
+              <span>Numeração</span>
             </div>
             {sizeChart.map((item) => (
               <div
-                className="grid grid-cols-[0.7fr_1fr_1fr_1fr] border-t border-white/10 px-3 py-4 text-sm text-zinc-300"
+                className="grid grid-cols-2 border-t border-white/10 px-4 py-4 text-sm text-zinc-300"
                 key={item.size}
               >
                 <strong className="text-white">{item.size}</strong>
-                <span>{item.waist}</span>
-                <span>{item.hip}</span>
-                <span>{item.height}</span>
+                <span>{item.number}</span>
               </div>
             ))}
           </div>
@@ -629,7 +675,7 @@ export default function Home() {
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.18em] text-zinc-500">Lançamento</p>
-                    <p className="mt-1 text-xl font-black text-white">20/05 - 08:00</p>
+                    <p className="mt-1 text-xl font-black text-white">25/05 - 08:00</p>
                   </div>
                   <p className="text-right text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400">
                     {launchCountdown.isFinished ? "Pedidos abertos" : "Contagem regressiva"}
@@ -715,16 +761,16 @@ export default function Home() {
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">Drop 01</p>
                     <h2 className="mt-1 text-2xl font-black leading-tight">Calção masculino de corrida</h2>
-                    <p className="mt-1 text-sm text-zinc-400">Preto ou Azul Escuro. Sem reposição imediata.</p>
+                    <p className="mt-1 text-sm text-zinc-400">Preto.</p>
                   </div>
                 </div>
                 <div className="mb-4 overflow-hidden rounded-2xl border border-white/10 bg-black/20">
                   <div className="flex items-center justify-between gap-3 border-b border-white/10 p-3">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Carrossel do produto</p>
-                      <p className="mt-1 text-sm font-bold text-white">
-                        {currentProductSlide.title} · {currentProductSlide.color}
-                      </p>
+                      {/* <p className="mt-1 text-sm font-bold text-white">
+                        {currentProductSlide.title} · {currentProductSlide.badge}
+                      </p> */}
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -750,11 +796,11 @@ export default function Home() {
 
                   <div className="border-t border-white/10 p-3">
                     {/* <p className="text-sm leading-6 text-zinc-400">{currentProductSlide.caption}</p> */}
-                    <div className="mt-3 grid grid-cols-4 gap-2">
+                    <div className="mt-3 grid grid-cols-5 gap-2">
                       {productSlides.map((slide, index) => (
                         <button
                           aria-label={`Ver ${slide.title}`}
-                          className={`rounded-xl border p-2 text-left transition ${activeProductSlide === index
+                          className={`rounded-xl border p-2 text-center transition ${activeProductSlide === index
                             ? "border-white/35 bg-white/[0.1]"
                             : "border-white/10 bg-white/[0.035] hover:bg-white/[0.07]"
                             }`}
@@ -765,7 +811,7 @@ export default function Home() {
                           <span className="block text-[0.62rem] font-black uppercase tracking-[0.1em] text-zinc-500">
                             {index + 1}
                           </span>
-                          <span className="mt-1 block truncate text-xs font-bold text-zinc-100">{slide.title}</span>
+                          <span className="mt-1 block truncate text-[0.62rem] font-bold text-zinc-100 sm:text-xs">{slide.title}</span>
                         </button>
                       ))}
                     </div>
@@ -783,7 +829,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.24em] text-zinc-500">COMUNIDADE</p>
-            <h2 className="mt-3 text-3xl font-black sm:text-4xl">Regis W. fala do short e por que ele entra na primeira produção.</h2>
+            <h2 className="mt-3 text-3xl font-black sm:text-4xl">Regis W. fundador da WBarber Runners.</h2>
             <p className="mt-5 max-w-xl leading-7 text-zinc-400">
               Uma visão direta de quem corre, lidera comunidade e testou a proposta do calção masculino AMÍ na prática.
             </p>
@@ -792,8 +838,8 @@ export default function Home() {
             </PrimaryButton>
           </div>
 
-          <div className="metal-surface overflow-hidden rounded-[1.5rem] p-3">
-            <div className="relative aspect-video overflow-hidden rounded-[1.1rem] border border-white/10 bg-black">
+          <div className="metal-surface mx-auto w-full max-w-[24rem] overflow-hidden rounded-[1.5rem] p-3 lg:mr-0">
+            <div className="relative aspect-[9/16] overflow-hidden rounded-[1.1rem] border border-white/10 bg-black">
               {founderVideoUrl ? (
                 <video className="h-full w-full object-cover" controls playsInline preload="metadata" src={founderVideoUrl}>
                   Seu navegador não suporta vídeo.
