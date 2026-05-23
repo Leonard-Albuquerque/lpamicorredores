@@ -137,7 +137,7 @@ const fabricSpecs = [
 const founderVideoUrl = "/videoregis.mp4";
 
 const sizeChart = [
-  { size: "P", number: "34/36" },
+  // { size: "P", number: "34/36" },
   { size: "M", number: "38/40" },
   { size: "G", number: "42/44" }
 ];
@@ -452,7 +452,7 @@ export default function Home() {
         <label>
           <span className="mb-1.5 block text-sm font-semibold text-zinc-300">Tamanho</span>
           <select className="field" onChange={(event) => updateField("size", event.target.value)} value={form.size}>
-            {["P", "M", "G"].map((size) => (
+            {["M", "G"].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>
