@@ -28,7 +28,7 @@ import {
 const WHATSAPP_NUMBER = "5585992468886";
 const INSTAGRAM_URL = "https://www.instagram.com/ami.fitnesss";
 const WBARBER_CHANNEL_URL = "https://whatsapp.com/channel/0029VbCi2aI1XquXkOvKVN1y";
-const LAUNCH_DATE = new Date("2026-05-25T00:00:00-03:00");
+const LAUNCH_DATE = new Date("2026-05-25T08:00:00-03:00");
 const SHORT_PHOTO_URL = "/short-capa.jpeg";
 // const TIKTOK_URL = "#";
 
